@@ -26,13 +26,6 @@ Deploys [Nix](https://nixos.org/nix/) for a specified user on **Debian/Ubuntu** 
 Written to `/etc/nix/nix.conf` on Linux via `lineinfile`. Ignored on Darwin where nix-darwin manages `nix.conf` itself.
 
 ```yaml
-nix_settings:
-  max-jobs: auto
-  # trusted-users grants the user elevated Nix daemon privileges
-  # (add substituters, override sandbox paths, etc.) - Linux only
-  # On Darwin, admin group members are trusted by default via @admin
-  trusted-users: '{{ nix_user }}'
-
 nix_extra_settings:
   sandbox: true
 ```
