@@ -1,0 +1,29 @@
+---
+- name: Update nix Channel
+  shell: |
+    . {{ nix_profile_path }}
+    nix-channel --add https://nixos.org/channels/nixpkgs-unstable nixpkgs
+    nix-channel --update
+  args:
+    executable: /bin/bash
+  become: true
+  become_user: '{{ nix_user }}'
+
+# We need to use one Nix version across all users.
+- name: Uninstall Nix from {{ nix_user }} profile
+  shell: |
+    . {{ nix_profile_path }}
+    nix profile remove nix cacert
+  args:
+    executable: /bin/bash
+  become: true
+  become_user: '{{ nix_user }}'
+
+- name: Install new Nix version system-wide
+  shell: |
+    echo $SHELL
+    . {{ nix_profile_path }}
+    # Remove first to avoid file conflict errors.
+    nix profile remove --profile /nix/var/nix/profiles/default nix
+    nix profile install --profile /nix/var/nix/profiles/default nixpkgs#{{nix_package}} nixpkgs#cacert
+  notify: restart nix-daemon

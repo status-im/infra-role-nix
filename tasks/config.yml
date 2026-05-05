@@ -1,0 +1,110 @@
+---
+- name: Debian | Nix installation
+  when: ansible_os_family == "Debian"
+  block:
+    - name: Fix file limits
+      include_tasks: limits.yml
+
+    - name: Modify Nix daemon settings
+      when: nix_multi_user
+      notify: restart nix-daemon
+      lineinfile:
+        path: /etc/nix/nix.conf
+        regexp: '^{{ item.key }} = .*'
+        line: '{{ item.key }} = {{ item.value }}'
+      with_dict: '{{ nix_settings | combine(nix_extra_settings) }}'
+
+    - name: Create profile and gcroots folders
+      file:
+        path: '{{ item }}'
+        owner: '{{ nix_user }}'
+        group: root
+        state: directory
+        mode: '0755'
+      with_items:
+        - '/nix/var/nix/profiles/per-user/{{ nix_user }}'
+        - '/nix/var/nix/gcroots/per-user/{{ nix_user }}'
+
+    - name: Add nixpkgs channel for user
+      when: nix_multi_user
+      shell: |
+        . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
+        nix-channel --add https://nixos.org/channels/nixpkgs-unstable nixpkgs
+        nix-channel --update
+      become_user: '{{ nix_user }}'
+
+    - name: Create a profile for the user
+      when: nix_multi_user
+      shell: |
+        . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
+        nix profile remove hello
+        nix profile install 'nixpkgs#hello'
+      become_user: '{{ nix_user }}'
+
+    - name: Add user to nixbld group
+      when: nix_multi_user
+      user:
+        name: '{{ nix_user }}'
+        groups: nixbld
+        append: true
+
+- name: Darwin | Nix installation
+  when: ansible_os_family == "Darwin"
+  block:
+    - name: Check conflicting /etc files before nix-darwin
+      stat:
+        path: "{{ item }}"
+      loop:
+        - /etc/nix/nix.conf
+        - /etc/bashrc
+        - /etc/zshrc
+        - /etc/zprofile
+      register: etc_files
+      become: true
+
+    - name: Check existing .before-nix-darwin backups
+      stat:
+        path: "{{ item }}.before-nix-darwin"
+      loop:
+        - /etc/nix/nix.conf
+        - /etc/bashrc
+        - /etc/zshrc
+        - /etc/zprofile
+      register: etc_backups
+      become: true
+
+    - name: Back up conflicting /etc files for nix-darwin
+      when:
+        - item.0.stat.exists
+        - not item.0.stat.islnk
+        - not item.1.stat.exists
+      command: mv {{ item.0.stat.path }} {{ item.0.stat.path }}.before-nix-darwin
+      loop: "{{ etc_files.results | zip(etc_backups.results) | list }}"
+      become: true
+
+    - name: Setup nix-darwin directories
+      file:
+        path: /etc/nix-darwin
+        state: directory
+        owner: "{{ nix_user }}"
+        mode: '0755'
+      become: true
+
+    - name: Deploy nix-darwin configuration
+      template:
+        src: "{{ item }}.j2"
+        dest: "/etc/nix-darwin/{{ item }}"
+      loop:
+        - flake.nix
+        - configuration.nix
+      register: nix_darwin_config
+
+    # extra-experimental-features flag is required because /etc/nix/nix.conf may
+    # still exist at this point (backed up above, but the symlink isn't yet in place).
+    - name: Apply nix-darwin switch
+      when: nix_darwin_config.changed or nix_force_apply | default(false)
+      shell: |
+        . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
+        nix --extra-experimental-features "nix-command flakes" \
+          run nix-darwin -- switch --flake /etc/nix-darwin
+      become: true

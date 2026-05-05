@@ -1,0 +1,16 @@
+---
+- name: Download Nix tarball
+  get_url:
+    url: '{{ nix_tarball_url }}'
+    checksum: '{{ nix_tarball_sha | mandatory }}'
+    dest: '/tmp/{{ nix_tarball }}'
+    mode: 0750
+
+# we have to use gtar because MacOS comes with BSD tar by default
+- name: Unpack Nix tarball
+  command: '{{ nix_tar_cmd }} xf {{ nix_tarball }}'
+  args:
+    chdir: /tmp
+    creates: '{{ nix_installer_path }}'
+  environment:
+    PATH: '/run/current-system/sw/bin:/usr/local/bin:/usr/bin:/bin'

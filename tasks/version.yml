@@ -1,0 +1,20 @@
+---
+
+- name: Set fact about Nix user and profile path
+  set_fact:
+    nix_profile_path: '{{ nix_profile_map["multi" if nix_multi_user else "single"] }}'
+
+- name: Check current Nix version
+  shell: |
+    source {{ nix_profile_path }}
+    nix --version
+  args:
+    executable: /bin/bash
+  register: nix_current_version_raw
+  ignore_errors: true
+  become_user: '{{ nix_user }}'
+
+- name: Extract Version from output
+  when: not nix_current_version_raw.failed
+  set_fact:
+    nix_current_version: '{{ nix_current_version_raw.stdout | split() | last | trim }}'

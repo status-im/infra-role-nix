@@ -1,0 +1,7 @@
+---
+nix_user: 'admin'
+nix_multi_install_user: admin
+nix_arch: 'x86_64'
+nix_platform: 'linux'
+nix_tarball_sha: 'sha256:4cc8606dcf5c315b40197a394456a6dedbb47a3403030b632371470c34c8735d'
+nix_tar_cmd: 'tar'

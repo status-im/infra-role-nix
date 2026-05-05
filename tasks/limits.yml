@@ -1,0 +1,14 @@
+---
+- name: Raise open files system limit
+  sysctl:
+    sysctl_file: '/etc/sysctl.d/88-ansible.conf'
+    name: 'fs.file-max'
+    value: '1048576'
+    state: present
+
+- name: Restart Nix daemon service
+  when: nix_multi_user
+  systemd:
+    name: 'nix-daemon'
+    state: 'restarted'
+    daemon_reload: true

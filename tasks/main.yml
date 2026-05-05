@@ -1,0 +1,26 @@
+---
+- name: Load platform dependent tarball info
+  include_vars: '{{ ansible_os_family }}/{{ ansible_machine }}.yml'
+
+- name: Run Nix purge script
+  when: nix_force_purge | bool
+  script: files/nix/purge.sh
+
+- import_tasks: version.yml
+
+- import_tasks: install.yml
+  when: nix_current_version is not defined
+
+- include_tasks: upgrade.yml
+  when: nix_current_version != nix_version and ansible_os_family == "Debian"
+
+- include_tasks: homebrew.yml
+  when: ansible_os_family == "Darwin"
+
+- import_tasks: config.yml
+
+- name: Cleanup after installation
+  file:
+    path: '{{ nix_installer_path }}'
+    state: absent
+  no_log: true

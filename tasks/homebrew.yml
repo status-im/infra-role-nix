@@ -1,0 +1,12 @@
+---
+- name: Ensure Homebrew is installed (required for nix-darwin casks)
+  stat:
+    path: /opt/homebrew/bin/brew
+  register: brew_check
+
+- name: Install Homebrew if missing
+  shell: /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+  become_user: "{{ nix_user }}"
+  environment:
+    NONINTERACTIVE: "1"
+  when: not brew_check.stat.exists

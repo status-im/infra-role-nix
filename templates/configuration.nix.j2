@@ -1,0 +1,50 @@
+{ pkgs, ... }: {
+
+  # System-wide packages for all users
+  environment.systemPackages = with pkgs; [
+    {% for pkg in nix_packages %}
+    {{ pkg }}
+    {% endfor %}
+  ];
+
+  # Without explicitly setting this, nix-darwin will auto-assign a random UID to the nixbld group
+  ids.uids.nixbld = {{ nix_first_build_uid - 1 }};
+
+  environment.systemPath = [
+    "/opt/homebrew/bin"
+    "/opt/homebrew/sbin"
+  ];
+
+  homebrew = {
+    enable = true;
+    onActivation.autoUpdate = true;
+    onActivation.upgrade = false;
+    onActivation.cleanup = "zap";
+    taps = [
+        {% for tap in nix_homebrew_taps %}
+        "{{ tap }}"
+        {% endfor %}
+    ];
+    casks = [
+        {% for cask in nix_homebrew_casks %}
+        "{{ cask }}"
+        {% endfor %}
+    ];
+    brews = [
+        {% for brew in nix_homebrew_brews %}
+        "{{ brew }}"
+        {% endfor %}
+    ];
+  };
+
+  nix.settings.experimental-features = "nix-command flakes";
+  programs.zsh = {
+    enable = true;
+    enableCompletion = false;
+  };
+  programs.bash.enable = true;
+  nixpkgs.hostPlatform = "aarch64-darwin";
+  
+  system.primaryUser = "{{ nix_user }}";
+  system.stateVersion = 5;
+}

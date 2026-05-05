@@ -1,0 +1,14 @@
+---
+- name: restart nix-daemon on Linux
+  listen: restart nix-daemon
+  service:
+    name: 'nix-daemon'
+    state: 'restarted'
+  when: ansible_os_family == "Debian"
+
+- name: restart nix-daemon on MacOS
+  listen: restart nix-daemon
+  community.general.launchd:
+    name: 'org.nixos.nix-daemon'
+    state: 'restarted'
+  when: ansible_os_family == "Darwin"

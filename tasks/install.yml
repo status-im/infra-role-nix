@@ -1,0 +1,25 @@
+---
+- import_tasks: download.yml
+
+- name: Create /nix directory with specific permissions
+  file:
+    path: /nix
+    state: directory
+    mode: '0755'
+    owner: '{{ nix_user }}'
+  when: ansible_os_family == "Debian"
+
+- name: Run Nix install script  # noqa: risky-shell-pipe
+  shell: |
+    if [ $(uname -s) == "Darwin" ]; then
+      # Because the script that does MacOS multi user install is trash.
+      export NIX_FIRST_BUILD_UID={{nix_first_build_uid}}
+    fi
+    yes | ./install --{% if not nix_multi_user %}no-{% endif %}daemon
+  args:
+    chdir: '{{ nix_installer_path }}'
+    executable: /bin/bash
+
+- name: Set new installed version var
+  set_fact:
+    nix_current_version: '{{ nix_version }}'
