@@ -20,6 +20,7 @@ Deploys [Nix](https://nixos.org/nix/) for a specified user on **Debian/Ubuntu** 
 | `nix_settings` | `{}` | Key/value pairs written to `/etc/nix/nix.conf` (Linux only) |
 | `nix_extra_settings` | `{}` | Merged on top of `nix_settings` for per-host overrides |
 | `nix_force_apply` | `false` | Force `nix-darwin switch` even when config is unchanged |
+| `nix_cleanup_delete_older_than` | `30d` | Nix Store cleanup removes entries older than this |
 
 ### nix_settings / nix_extra_settings
 

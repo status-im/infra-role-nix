@@ -5,3 +5,5 @@ nix_arch: 'aarch64'
 nix_platform: 'darwin'
 nix_tarball_sha: 'sha256:e8e1697edaca128f1df5e4bc90f9b2d203fd4935380c4a46eaf2e8fc1a867c7e'
 nix_tar_cmd: 'gtar'
+nix_cleanup_timer_frequency: 86400
+nix_cleanup_timer_script_path: '/run/current-system/sw/bin/nix-collect-garbage'

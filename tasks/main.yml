@@ -19,6 +19,8 @@
 
 - import_tasks: 'config.yml'
 
+- include_tasks: '{{ ansible_system | lower }}/cleanup.yml'
+
 - name: Cleanup after installation
   file:
     path: '{{ nix_installer_path }}'

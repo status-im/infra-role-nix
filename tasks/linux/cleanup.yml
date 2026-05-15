@@ -1,0 +1,17 @@
+---
+- name: Setup Nix Store cleanup Systemd timer
+  include_role: name=infra-role-systemd-timer
+  vars:
+    systemd_timer_start_on_creation: false
+    systemd_timer_documentation:     'https://github.com/status-im/infra-role-nix'
+    systemd_timer_description:       '{{ nix_cleanup_timer_description    | mandatory }}'
+    systemd_timer_enabled:           '{{ nix_cleanup_timer_enabled        | mandatory }}'
+    systemd_timer_consul_warning:    '{{ nix_cleanup_timer_consul_warning | mandatory }}'
+    systemd_timer_name:              '{{ nix_cleanup_timer_name           | mandatory }}'
+    systemd_timer_user:              '{{ nix_cleanup_timer_user           | mandatory }}'
+    systemd_timer_group:             '{{ nix_cleanup_timer_group          | mandatory }}'
+    systemd_timer_frequency:         '{{ nix_cleanup_timer_frequency      | mandatory }}'
+    systemd_timer_timeout_sec:       '{{ nix_cleanup_timer_timeout_sec    | mandatory }}'
+    systemd_timer_script_path:       '{{ nix_cleanup_timer_script_path    | mandatory }}'
+    systemd_timer_script_args: >-
+      --delete-older-than {{ nix_cleanup_delete_older_than | mandatory }}
