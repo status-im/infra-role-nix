@@ -6,18 +6,18 @@
   when: nix_force_purge | bool
   script: files/purge.sh
 
-- import_tasks: version.yml
+- import_tasks: 'version.yml'
 
-- import_tasks: install.yml
+- import_tasks: 'install.yml'
   when: nix_current_version is not defined
 
-- include_tasks: upgrade.yml
-  when: nix_current_version != nix_version and ansible_os_family == "Debian"
+- include_tasks: '{{ ansible_system | lower }}/upgrade.yml'
+  when: nix_current_version != nix_version
 
-- include_tasks: homebrew.yml
-  when: ansible_os_family == "Darwin"
+- include_tasks: '{{ ansible_system | lower }}/homebrew.yml'
+  when: ansible_system == "Darwin"
 
-- import_tasks: config.yml
+- import_tasks: 'config.yml'
 
 - name: Cleanup after installation
   file:
