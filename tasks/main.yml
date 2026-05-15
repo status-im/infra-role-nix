@@ -4,7 +4,7 @@
 
 - name: Run Nix purge script
   when: nix_force_purge | bool
-  script: files/nix/purge.sh
+  script: files/purge.sh
 
 - import_tasks: version.yml
 
