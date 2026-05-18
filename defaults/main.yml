@@ -70,6 +70,8 @@ nix_packages_no_check:
 
 nix_extra_packages: []
 
+nix_packages: '{{ nix_default_packages + nix_extra_packages }}'
+
 nix_homebrew_casks: []
 nix_homebrew_taps: []
 nix_homebrew_brews: []
