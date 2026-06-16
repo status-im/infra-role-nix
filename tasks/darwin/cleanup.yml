@@ -3,14 +3,15 @@
   include_role: name=infra-role-launchd-timer
   vars:
     launchd_timer_start_on_creation: false
-    launchd_timer_description:       '{{ nix_cleanup_timer_description    | mandatory }}'
-    launchd_timer_enabled:           '{{ nix_cleanup_timer_enabled        | mandatory }}'
-    launchd_timer_consul_warning:    '{{ nix_cleanup_timer_consul_warning | mandatory }}'
-    launchd_timer_name:              '{{ nix_cleanup_timer_name           | mandatory }}'
-    launchd_timer_user:              '{{ nix_cleanup_timer_user           | mandatory }}'
-    launchd_timer_group:             '{{ nix_cleanup_timer_group          | mandatory }}'
-    launchd_timer_frequency:         '{{ nix_cleanup_timer_frequency      | mandatory }}'
-    launchd_timer_timeout_sec:       '{{ nix_cleanup_timer_timeout_sec    | mandatory }}'
-    launchd_timer_script_path:       '{{ nix_cleanup_timer_script_path    | mandatory }}'
+    launchd_timer_description:             '{{ nix_cleanup_timer_description             | mandatory }}'
+    launchd_timer_enabled:                 '{{ nix_cleanup_timer_enabled                 | mandatory }}'
+    launchd_timer_consul_warning:          '{{ nix_cleanup_timer_consul_warning          | mandatory }}'
+    launchd_timer_name:                    '{{ nix_cleanup_timer_name                    | mandatory }}'
+    launchd_timer_user:                    '{{ nix_cleanup_timer_user                    | mandatory }}'
+    launchd_timer_group:                   '{{ nix_cleanup_timer_group                   | mandatory }}'
+    launchd_timer_frequency:               '{{ nix_cleanup_timer_frequency               | mandatory }}'
+    launchd_timer_timeout_sec:             '{{ nix_cleanup_timer_timeout_sec             | mandatory }}'
+    launchd_timer_script_path:             '{{ nix_cleanup_timer_script_path             | mandatory }}'
+    launchd_timer_start_calendar_interval: '{{ nix_cleanup_timer_start_calendar_interval | default({}) }}'
     launchd_timer_script_args: >-
       --delete-older-than {{ nix_cleanup_delete_older_than | mandatory }}

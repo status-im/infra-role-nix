@@ -51,6 +51,10 @@ nix_cleanup_timer_group: 'admin'
 #nix_cleanup_timer_script_path: ~
 nix_cleanup_timer_timeout_sec: 1800 # 30 min
 nix_cleanup_delete_older_than: '30d'
+nix_cleanup_timer_start_calendar_interval:
+  Weekday: 1
+  Hour: 3
+  Minute: 0
 
 # Only used by nix-darwin
 nix_pkgs_rev: '98bf8103e311377ca1d648c22f56332756d89bb2' #nixpkgs-25.11-darwin
