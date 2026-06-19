@@ -1,4 +1,13 @@
 ---
+- name: Copy nix GC wrapper script
+  copy:
+    src: nix-gc-wrapper.sh
+    dest: /usr/local/bin/nix-gc-wrapper.sh
+    mode: 0755
+    owner: root
+    group: wheel
+  become: true
+
 - name: Setup Nix Store cleanup Launchd timer
   include_role: name=infra-role-launchd-timer
   vars:
