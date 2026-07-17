@@ -51,8 +51,8 @@
 # still exist at this point (backed up above, but the symlink isn't yet in place).
 - name: Apply nix-darwin switch
   when: nix_darwin_config.changed or nix_force_apply | default(false)
-  shell: |
-    . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
-    nix --extra-experimental-features "nix-command flakes" \
-      run nix-darwin -- switch --flake /etc/nix-darwin
   become: true
+  environment:
+    HOMEBREW_NO_ASK: '1'
+  shell: |
+    /run/current-system/sw/bin/darwin-rebuild switch --flake /etc/nix-darwin
