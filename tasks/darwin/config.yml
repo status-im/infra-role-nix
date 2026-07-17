@@ -1,0 +1,58 @@
+---
+- name: Check conflicting /etc files before nix-darwin
+  stat:
+    path: "{{ item }}"
+  loop:
+    - /etc/nix/nix.conf
+    - /etc/bashrc
+    - /etc/zshrc
+    - /etc/zprofile
+  register: etc_files
+  become: true
+
+- name: Check existing .before-nix-darwin backups
+  stat:
+    path: "{{ item }}.before-nix-darwin"
+  loop:
+    - /etc/nix/nix.conf
+    - /etc/bashrc
+    - /etc/zshrc
+    - /etc/zprofile
+  register: etc_backups
+  become: true
+
+- name: Back up conflicting /etc files for nix-darwin
+  when:
+    - item.0.stat.exists
+    - not item.0.stat.islnk
+    - not item.1.stat.exists
+  command: mv {{ item.0.stat.path }} {{ item.0.stat.path }}.before-nix-darwin
+  loop: "{{ etc_files.results | zip(etc_backups.results) | list }}"
+  become: true
+
+- name: Setup nix-darwin directories
+  file:
+    path: /etc/nix-darwin
+    state: directory
+    owner: "{{ nix_user }}"
+    mode: '0755'
+  become: true
+
+- name: Deploy nix-darwin configuration
+  template:
+    src: "{{ item }}.j2"
+    dest: "/etc/nix-darwin/{{ item }}"
+  loop:
+    - flake.nix
+    - configuration.nix
+  register: nix_darwin_config
+
+# extra-experimental-features flag is required because /etc/nix/nix.conf may
+# still exist at this point (backed up above, but the symlink isn't yet in place).
+- name: Apply nix-darwin switch
+  when: nix_darwin_config.changed or nix_force_apply | default(false)
+  shell: |
+    . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
+    nix --extra-experimental-features "nix-command flakes" \
+      run nix-darwin -- switch --flake /etc/nix-darwin
+  become: true

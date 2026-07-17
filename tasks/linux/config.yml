@@ -1,0 +1,46 @@
+---
+- name: Fix file limits
+  include_tasks: limits.yml
+
+- name: Modify Nix daemon settings
+  when: nix_multi_user
+  notify: restart nix-daemon
+  lineinfile:
+    path: /etc/nix/nix.conf
+    regexp: '^{{ item.key }} = .*'
+    line: '{{ item.key }} = {{ item.value }}'
+  with_dict: '{{ nix_settings | combine(nix_extra_settings) }}'
+
+- name: Create profile and gcroots folders
+  file:
+    path: '{{ item }}'
+    owner: '{{ nix_user }}'
+    group: root
+    state: directory
+    mode: '0755'
+  with_items:
+    - '/nix/var/nix/profiles/per-user/{{ nix_user }}'
+    - '/nix/var/nix/gcroots/per-user/{{ nix_user }}'
+
+- name: Add nixpkgs channel for user
+  when: nix_multi_user
+  shell: |
+    . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
+    nix-channel --add https://nixos.org/channels/nixpkgs-unstable nixpkgs
+    nix-channel --update
+  become_user: '{{ nix_user }}'
+
+- name: Create a profile for the user
+  when: nix_multi_user
+  shell: |
+    . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
+    nix profile remove hello
+    nix profile install 'nixpkgs#hello'
+  become_user: '{{ nix_user }}'
+
+- name: Add user to nixbld group
+  when: nix_multi_user
+  user:
+    name: '{{ nix_user }}'
+    groups: nixbld
+    append: true

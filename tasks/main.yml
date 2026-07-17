@@ -17,7 +17,7 @@
 - include_tasks: '{{ ansible_system | lower }}/homebrew.yml'
   when: ansible_system == "Darwin"
 
-- import_tasks: 'config.yml'
+- include_tasks: '{{ ansible_system | lower }}/config.yml'
 
 - include_tasks: '{{ ansible_system | lower }}/cleanup.yml'
 
