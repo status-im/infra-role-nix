@@ -17,9 +17,12 @@
 
   homebrew = {
     enable = true;
-    onActivation.autoUpdate = true;
-    onActivation.upgrade = false;
-    onActivation.cleanup = "zap";
+    onActivation = {
+      autoUpdate = true;
+      upgrade = false;
+      cleanup = "zap";
+      extraFlags = [ "--force-cleanup" ];
+    };
     taps = [
         {% for tap in nix_homebrew_taps %}
         "{{ tap }}"
@@ -46,7 +49,7 @@
   };
   programs.bash.enable = true;
   nixpkgs.hostPlatform = "aarch64-darwin";
-  
+
   system.primaryUser = "{{ nix_user }}";
   system.stateVersion = 5;
 }
