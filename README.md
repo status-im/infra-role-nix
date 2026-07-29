@@ -49,3 +49,11 @@ subsequent runs are idempotent.
 | Handler | Trigger |
 |---|---|
 | `restart nix-daemon` | Any change to `/etc/nix/nix.conf` (Linux only) |
+
+# Known Issues
+
+- Nix install fails with: `vifs: error creating /etc/fstab`
+  - Go to: `System Settings` → `General` → `Sharing`
+  - Click ⓘ icon next to `Remote Login`
+  - Enable `Allow full disk access for remote users.`
+  - ![Full disk access screenshot](./files/full_disk_access_fix.png)
