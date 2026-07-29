@@ -55,4 +55,5 @@
   environment:
     HOMEBREW_NO_ASK: '1'
   shell: |
-    /run/current-system/sw/bin/darwin-rebuild switch --flake /etc/nix-darwin
+    nix run nix-darwin/master#darwin-rebuild -- \
+      switch --flake /etc/nix-darwin
