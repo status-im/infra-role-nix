@@ -10,3 +10,10 @@
   environment:
     NONINTERACTIVE: "1"
   when: not brew_check.stat.exists
+
+- name: Install GNU Tar and XZ for Nix tarball
+  homebrew:
+    name: ['gnu-tar', 'xz']
+  become_user: "{{ nix_user }}"
+  environment:
+    NONINTERACTIVE: "1"

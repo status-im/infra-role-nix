@@ -13,4 +13,4 @@
     chdir: /tmp
     creates: '{{ nix_installer_path }}'
   environment:
-    PATH: '/run/current-system/sw/bin:/usr/local/bin:/usr/bin:/bin'
+    PATH: '/run/current-system/sw/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin'
