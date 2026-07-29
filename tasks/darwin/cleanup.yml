@@ -14,12 +14,18 @@
     group: 'wheel'
   become:  true
 
+- name: Check if Consul is installed
+  register: consul_dir
+  stat:
+    path: '/etc/consul'
+
 - name: Setup Nix Store cleanup Launchd timer
   include_role: name=infra-role-launchd-timer
   vars:
     launchd_timer_start_on_creation: false
     launchd_timer_description:             '{{ nix_cleanup_timer_description             | mandatory }}'
     launchd_timer_enabled:                 '{{ nix_cleanup_timer_enabled                 | mandatory }}'
+    launchd_timer_consul_service_enabled:  '{{ consul_dir.stat.exists                                }}'
     launchd_timer_consul_warning:          '{{ nix_cleanup_timer_consul_warning          | mandatory }}'
     launchd_timer_name:                    '{{ nix_cleanup_timer_name                    | mandatory }}'
     launchd_timer_user:                    '{{ nix_cleanup_timer_user                    | mandatory }}'
