@@ -1,12 +1,18 @@
 ---
-- name: Copy nix GC wrapper script
+- name: Create directory for Nix GC wrapper
+  file:
+    path:  '{{ nix_cleanup_timer_script_path | dirname }}'
+    state: 'directory'
+    mode:  '0o755'
+
+- name: Copy Nix GC wrapper script
   copy:
-    src: nix-gc-wrapper.sh
-    dest: /usr/local/bin/nix-gc-wrapper.sh
-    mode: 0755
-    owner: root
-    group: wheel
-  become: true
+    src:   'nix-gc-wrapper.sh'
+    dest:  '{{ nix_cleanup_timer_script_path }}'
+    mode:  '0o755'
+    owner: 'root'
+    group: 'wheel'
+  become:  true
 
 - name: Setup Nix Store cleanup Launchd timer
   include_role: name=infra-role-launchd-timer
