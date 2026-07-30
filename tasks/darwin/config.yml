@@ -55,5 +55,7 @@
   environment:
     HOMEBREW_NO_ASK: '1'
   shell: |
-    nix run nix-darwin/master#darwin-rebuild -- \
+    /nix/var/nix/profiles/default/bin/nix \
+      --extra-experimental-features 'nix-command flakes' \
+      run nix-darwin/master#darwin-rebuild -- \
       switch --flake /etc/nix-darwin
