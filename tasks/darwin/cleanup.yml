@@ -33,6 +33,7 @@
     launchd_timer_frequency:               '{{ nix_cleanup_timer_frequency               | mandatory }}'
     launchd_timer_timeout_sec:             '{{ nix_cleanup_timer_timeout_sec             | mandatory }}'
     launchd_timer_script_path:             '{{ nix_cleanup_timer_script_path             | mandatory }}'
+    launchd_timer_consul_check_timeout:    '{{ nix_cleanup_timer_consul_check_timeout    | mandatory }}'
     launchd_timer_start_calendar_interval: '{{ nix_cleanup_timer_start_calendar_interval | default({}) }}'
     launchd_timer_script_args: >-
       --delete-older-than {{ nix_cleanup_delete_older_than | mandatory }}
