@@ -5,12 +5,15 @@
     nixpkgs.url = "github:NixOS/nixpkgs/{{ nix_pkgs_rev }}";
     nix-darwin.url = "github:LnL7/nix-darwin/{{ nix_darwin_rev }}";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
+    nimbus-build-system.url = "git+https://github.com/status-im/nimbus-build-system?rev={{ nix_nbs_rev }}&submodules=1";
+
 {% for name, url in nix_additional_inputs.items() %}
     {{ name }}.url = "{{ url }}";
 {% endfor %}
   };
 
-  outputs = inputs@{ self, nix-darwin, nixpkgs, ... }: {
+  outputs = inputs@{ self, nix-darwin, nixpkgs, nimbus-build-system, ... }: {
+
     darwinConfigurations."{{ ansible_hostname }}" = nix-darwin.lib.darwinSystem {
       specialArgs = {inherit inputs;};
       modules = [
@@ -21,6 +24,8 @@
               {% for pkg in nix_packages_no_check %}
               {{ pkg }} = prev.{{ pkg }}.overrideAttrs (_: { doCheck = false; });
               {% endfor %}
+              /* Nim built by nimbus-build-system, as used by Status projects. */
+              nim-nbs = nimbus-build-system.packages.${prev.stdenv.hostPlatform.system}.nim;
             })
           ];
         }

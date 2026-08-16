@@ -62,6 +62,7 @@ nix_cleanup_timer_start_calendar_interval:
 # Only used by nix-darwin
 nix_pkgs_rev: '98bf8103e311377ca1d648c22f56332756d89bb2' #nixpkgs-25.11-darwin
 nix_darwin_rev: 'ebec37af18215214173c98cf6356d0aca24a2585' #nix-darwin-25.11
+nix_nbs_rev: 'cb9cfbdad6c02cfbe432c9ce4bd734e5bedbdf4b' #nimbus-build-system master, Nim 2.2.10
 nix_bin_path: '/run/current-system/sw/bin'
 nix_default_packages:
   - jq
@@ -86,6 +87,7 @@ nix_default_packages:
   - chrony
   - xcodes
   - nixVersions.nix_2_32
+  - nim-nbs
 
 nix_packages_no_check:
   - chrony
