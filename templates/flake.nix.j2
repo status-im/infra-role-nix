@@ -5,10 +5,14 @@
     nixpkgs.url = "github:NixOS/nixpkgs/{{ nix_pkgs_rev }}";
     nix-darwin.url = "github:LnL7/nix-darwin/{{ nix_darwin_rev }}";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
+{% for name, url in nix_additional_inputs.items() %}
+    {{ name }}.url = "{{ url }}";
+{% endfor %}
   };
 
-  outputs = inputs@{ self, nix-darwin, nixpkgs }: {
+  outputs = inputs@{ self, nix-darwin, nixpkgs, ... }: {
     darwinConfigurations."{{ ansible_hostname }}" = nix-darwin.lib.darwinSystem {
+      specialArgs = {inherit inputs;};
       modules = [
         ./configuration.nix
         {

@@ -40,6 +40,8 @@ nix_settings:
   'extra-trusted-public-keys': 'nix-cache.status.im-1:x/93lOfLU+duPplwMSBR+OlY4+mo+dCN7n0mr4oPwgY='
 
 nix_extra_settings: {}
+nix_additional_inputs: {}
+#  unstable: 'github:NixOS/nixpkgs/commit-rev'
 
 # Regular Nix store cleanup on a timer
 nix_cleanup_timer_enabled: true

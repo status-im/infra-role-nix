@@ -21,6 +21,7 @@ Deploys [Nix](https://nixos.org/nix/) for a specified user on **Debian/Ubuntu** 
 | `nix_extra_settings` | `{}` | Merged on top of `nix_settings` for per-host overrides |
 | `nix_force_apply` | `false` | Force `nix-darwin switch` even when config is unchanged |
 | `nix_cleanup_delete_older_than` | `30d` | Nix Store cleanup removes entries older than this |
+| `nix_additional_inputs` | `{}` | Key/values pair of addtionnal inputs |
 
 ### nix_settings / nix_extra_settings
 
@@ -30,6 +31,17 @@ Written to `/etc/nix/nix.conf` on Linux via `lineinfile`. Ignored on Darwin wher
 nix_extra_settings:
   sandbox: true
 ```
+
+### nix_additional_inputs
+
+Add additional inputs to the `flake,nix`:
+
+```
+nix_additional_inputs:
+  unstable: 'github:NixOS/nixpkgs/commit-rev'
+
+```
+
 
 ## Darwin prerequisites
 
