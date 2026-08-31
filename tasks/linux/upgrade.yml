@@ -2,7 +2,7 @@
 - name: Update nix Channel
   shell: |
     . {{ nix_profile_path }}
-    nix-channel --add https://nixos.org/channels/nixpkgs-unstable nixpkgs
+    nix-channel --add https://nixos.org/channels/{{ nix_channel }} nixpkgs
     nix-channel --update
   args:
     executable: /bin/bash

@@ -26,7 +26,7 @@
   when: nix_multi_user
   shell: |
     . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
-    nix-channel --add https://nixos.org/channels/nixpkgs-unstable nixpkgs
+    nix-channel --add https://nixos.org/channels/{{ nix_channel }} nixpkgs
     nix-channel --update
   become_user: '{{ nix_user }}'
 

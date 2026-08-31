@@ -2,6 +2,7 @@
 nix_user: 'admin'
 nix_version: '2.33.1'
 nix_package: 'nixVersions.nix_2_33'
+nix_channel: 'nixos-26.05'
 #nix_dir: ~
 #nix_platform: ~
 #nix_tarball_sha: ~
