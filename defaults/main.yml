@@ -40,6 +40,13 @@ nix_settings:
   'extra-trusted-public-keys': 'nix-cache.status.im-1:x/93lOfLU+duPplwMSBR+OlY4+mo+dCN7n0mr4oPwgY='
 
 nix_extra_settings: {}
+
+# Tokens for authenticated fetches from Git forges like GitHub.
+# Kept in a separate file included from nix.conf so they stay out of the Nix store on Darwin.
+nix_access_tokens: {}
+#  'github.com': 'ghp_...'
+nix_access_tokens_file: '/etc/nix/access-tokens.conf'
+
 nix_additional_inputs: {}
 #  unstable: 'github:NixOS/nixpkgs/commit-rev'
 

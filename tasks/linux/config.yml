@@ -11,6 +11,23 @@
     line: '{{ item.key }} = {{ item.value }}'
   with_dict: '{{ nix_settings | combine(nix_extra_settings) }}'
 
+- name: Create Nix access tokens file
+  when: nix_multi_user
+  template:
+    src:   'access-tokens.conf.j2'
+    dest:  '{{ nix_access_tokens_file }}'
+    owner: 'root'
+    group: 'root'
+    mode:  0644
+
+- name: Include Nix access tokens file
+  when: nix_multi_user
+  notify: restart nix-daemon
+  lineinfile:
+    path: /etc/nix/nix.conf
+    regexp: '^!include '
+    line: '!include {{ nix_access_tokens_file }}'
+
 - name: Create profile and gcroots folders
   file:
     path: '{{ item }}'

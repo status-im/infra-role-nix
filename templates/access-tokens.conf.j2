@@ -1,0 +1,3 @@
+# Managed by Ansible. Tokens used by Nix for authenticated fetches from Git forges.
+access-tokens ={% for host, token in nix_access_tokens.items() %} {{ host }}={{ token }}{% endfor %}
+

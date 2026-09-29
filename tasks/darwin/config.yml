@@ -38,6 +38,15 @@
     mode: '0755'
   become: true
 
+- name: Create Nix access tokens file
+  template:
+    src:   'access-tokens.conf.j2'
+    dest:  '{{ nix_access_tokens_file }}'
+    owner: 'root'
+    group: 'wheel'
+    mode:  '0644'
+  become: true
+
 - name: Deploy nix-darwin configuration
   template:
     src: "{{ item }}.j2"
