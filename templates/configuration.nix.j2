@@ -20,8 +20,8 @@
     onActivation = {
       autoUpdate = true;
       upgrade = false;
-      cleanup = "zap";
-      extraFlags = [ "--force-cleanup" ];
+      cleanup = "none";
+      extraFlags = [ "--force-cleanup" "--zap" ];
     };
     taps = [
         {% for tap in nix_homebrew_taps %}
