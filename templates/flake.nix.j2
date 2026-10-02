@@ -2,10 +2,12 @@
   description = "System Nix Darwin Configuration";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/{{ nix_pkgs_rev }}";
-    nix-darwin.url = "github:LnL7/nix-darwin/{{ nix_darwin_rev }}";
+    nixpkgs.url = "github:NixOS/nixpkgs/{{ nix_darwin_pkgs_rev }}";
+    nix-darwin.url = "github:LnL7/nix-darwin/{{ nix_darwin_flake_rev }}";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
-    nimbus-build-system.url = "git+https://github.com/status-im/nimbus-build-system?rev={{ nix_nbs_rev }}&submodules=1";
+    determinate.url = "https://flakehub.com/f/DeterminateSystems/determinate/3.22.5";
+    determinate.inputs.nixpkgs.follows = "nixpkgs";
+    nimbus-build-system.url = "git+https://github.com/status-im/nimbus-build-system?rev={{ nix_darwin_nbs_rev }}&submodules=1";
 
 {% for name, url in nix_additional_inputs.items() %}
     {{ name }}.url = "{{ url }}";
@@ -18,10 +20,11 @@
       specialArgs = {inherit inputs;};
       modules = [
         ./configuration.nix
+        inputs.determinate.darwinModules.default
         {
           nixpkgs.overlays = [
             (final: prev: {
-              {% for pkg in nix_packages_no_check %}
+              {% for pkg in nix_darwin_packages_no_check %}
               {{ pkg }} = prev.{{ pkg }}.overrideAttrs (_: { doCheck = false; });
               {% endfor %}
               /* Nim built by nimbus-build-system, as used by Status projects. */

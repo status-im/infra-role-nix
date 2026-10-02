@@ -1,0 +1,5 @@
+# Written by https://github.com/status-im/infra-role-nix
+# The contents below are based on nix_settings and nix_extra_settings.
+{% for key, value in (nix_settings | combine(nix_extra_settings)) | dictsort %}
+{{ key }} = {{ value }}
+{% endfor %}

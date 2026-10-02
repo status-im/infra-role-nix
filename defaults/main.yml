@@ -1,44 +1,27 @@
 ---
 nix_user: 'admin'
-nix_version: '2.33.1'
-nix_package: 'nixVersions.nix_2_33'
-nix_channel: 'nixos-26.05'
-#nix_dir: ~
-#nix_platform: ~
-#nix_tarball_sha: ~
-#nix_tar_cmd: ~
-nix_url: 'https://nixos.org/releases/nix/nix-{{ nix_version }}'
-nix_tarball: 'nix-{{ nix_version }}-{{ nix_arch }}-{{ nix_platform | mandatory }}.tar.xz'
-nix_tarball_url: '{{ nix_url }}/{{ nix_tarball }}'
-nix_installer_path: /tmp/nix-{{ nix_version }}-{{ nix_arch }}-{{ nix_platform }}
-nix_multi_user: true
-#nix_multi_install_user: ~
-nix_profile_map:
-  multi: '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh'
-  single: '~/.nix-profile/etc/profile.d/nix.sh'
-# Because the script that does MacOS multi user install is trash.
+nix_version: '3.22.5'
+nix_installer_url: 'https://github.com/DeterminateSystems/nix-installer/releases/download/v{{ nix_version }}/nix-installer-{{ nix_arch }}-{{ nix_platform }}'
+nix_installer_path: '/tmp/nix-installer-{{ nix_version }}-{{ nix_arch }}-{{ nix_platform }}'
+nix_custom_conf_path: '/etc/nix/nix.custom.conf'
+nix_ansible_conf_path: '/etc/nix/nix.ansible.conf'
+# Used by nix-darwin's nixbld user configuration.
 nix_first_build_uid: 30000
 
 # Use to force purge nix, useful when installation is broken.
 nix_force_purge: false
 
-# Use to force apply nix darwin configuration switch even when config is unchanged.
-nix_force_apply: false
-
-nix_experimental_features:
-  - flakes
-  - nix-command
-  - auto-allocate-uids
+# Allow enabling experimental features.
+nix_experimental_features: []
 
 # Cache
 nix_settings:
-  'build-users-group': 'nixbld'
-  'auto-allocate-uids': 'false'
   'experimental-features': '{{ nix_experimental_features | join(" ") }}'
   'download-buffer-size': '{{ 256 * 1024 * 1024 }}' # 256 MB
   'extra-substituters': 'https://nix-cache.status.im/'
   'extra-trusted-public-keys': 'nix-cache.status.im-1:x/93lOfLU+duPplwMSBR+OlY4+mo+dCN7n0mr4oPwgY='
 
+# Additional settings which override defaults from nix_settings.
 nix_extra_settings: {}
 
 # Tokens for authenticated fetches from Git forges like GitHub.
@@ -67,11 +50,13 @@ nix_cleanup_timer_start_calendar_interval:
   Minute: 0
 
 # Only used by nix-darwin
-nix_pkgs_rev: '98bf8103e311377ca1d648c22f56332756d89bb2' #nixpkgs-25.11-darwin
-nix_darwin_rev: 'ebec37af18215214173c98cf6356d0aca24a2585' #nix-darwin-25.11
-nix_nbs_rev: 'cb9cfbdad6c02cfbe432c9ce4bd734e5bedbdf4b' #nimbus-build-system master, Nim 2.2.10
-nix_bin_path: '/run/current-system/sw/bin'
-nix_default_packages:
+nix_darwin_pkgs_rev: '98bf8103e311377ca1d648c22f56332756d89bb2' #nixpkgs-25.11-darwin
+nix_darwin_flake_rev: 'ebec37af18215214173c98cf6356d0aca24a2585' #nix-darwin-25.11
+nix_darwin_nbs_rev: 'cb9cfbdad6c02cfbe432c9ce4bd734e5bedbdf4b' #nimbus-build-system master, Nim 2.2.10
+nix_darwin_bin_path: '/run/current-system/sw/bin'
+# Use to force apply nix darwin configuration switch even when config is unchanged.
+nix_darwin_force_apply: false
+nix_darwin_default_packages:
   - jq
   - fzf
   - wget
@@ -93,16 +78,11 @@ nix_default_packages:
   - mtr-exporter
   - chrony
   - xcodes
-  - nixVersions.nix_2_32
   - nim-nbs
 
-nix_packages_no_check:
+nix_darwin_packages_no_check:
   - chrony
 
-nix_extra_packages: []
+nix_darwin_extra_packages: []
 
-nix_packages: '{{ nix_default_packages + nix_extra_packages }}'
-
-nix_homebrew_casks: []
-nix_homebrew_taps: []
-nix_homebrew_brews: []
+nix_darwin_packages: '{{ nix_darwin_default_packages + nix_darwin_extra_packages }}'

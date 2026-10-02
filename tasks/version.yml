@@ -1,20 +1,31 @@
 ---
-
-- name: Set fact about Nix user and profile path
-  set_fact:
-    nix_profile_path: '{{ nix_profile_map["multi" if nix_multi_user else "single"] }}'
-
 - name: Check current Nix version
   shell: |
-    source {{ nix_profile_path }}
+    source /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
     nix --version
   args:
-    executable: /bin/bash
+    executable: '/bin/bash'
   register: nix_current_version_raw
   ignore_errors: true
   become_user: '{{ nix_user }}'
 
 - name: Extract Version from output
-  when: not nix_current_version_raw.failed
+  when:
+    - not nix_current_version_raw.failed
+    - "'Determinate Nix' not in nix_current_version_raw.stdout"
   set_fact:
-    nix_current_version: '{{ nix_current_version_raw.stdout | split() | last | trim }}'
+    nix_is_determinate: false
+    nix_current_version: >-
+      {{ nix_current_version_raw.stdout
+      | split() | last | trim }}
+
+- name: Extract Determinate Nix version
+  when:
+    - not nix_current_version_raw.failed
+    - "'Determinate Nix' in nix_current_version_raw.stdout"
+  set_fact:
+    nix_is_determinate: true
+    nix_current_version: >-
+      {{ (nix_current_version_raw.stdout
+      | regex_findall('Determinate Nix ([^)]+)'))
+      | first | default('') | trim }}

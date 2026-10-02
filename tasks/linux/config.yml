@@ -1,63 +1,51 @@
 ---
-- name: Fix file limits
-  include_tasks: limits.yml
-
-- name: Modify Nix daemon settings
-  when: nix_multi_user
+- name: Raise open files system limit
   notify: restart nix-daemon
-  lineinfile:
-    path: /etc/nix/nix.conf
-    regexp: '^{{ item.key }} = .*'
-    line: '{{ item.key }} = {{ item.value }}'
-  with_dict: '{{ nix_settings | combine(nix_extra_settings) }}'
+  sysctl:
+    sysctl_file: '/etc/sysctl.d/88-ansible.conf'
+    name:  'fs.file-max'
+    value: '1048576'
+    state: 'present'
+
+- name: Create Nix config file
+  notify: restart nix-daemon
+  template:
+    src:   'nix.ansible.conf.j2'
+    dest:  '{{ nix_ansible_conf_path }}'
+    owner: 'root'
+    group: 'root'
+    mode:  '0o644'
 
 - name: Create Nix access tokens file
-  when: nix_multi_user
   template:
     src:   'access-tokens.conf.j2'
     dest:  '{{ nix_access_tokens_file }}'
     owner: 'root'
     group: 'root'
-    mode:  0644
+    mode:  '0o644'
 
-- name: Include Nix access tokens file
-  when: nix_multi_user
+- name: Include Nix access and config files
   notify: restart nix-daemon
   lineinfile:
-    path: /etc/nix/nix.conf
-    regexp: '^!include '
-    line: '!include {{ nix_access_tokens_file }}'
-
-- name: Create profile and gcroots folders
-  file:
-    path: '{{ item }}'
-    owner: '{{ nix_user }}'
-    group: root
-    state: directory
-    mode: '0755'
+    path: '{{ nix_custom_conf_path }}'
+    line: '!include {{ item }}'
   with_items:
-    - '/nix/var/nix/profiles/per-user/{{ nix_user }}'
-    - '/nix/var/nix/gcroots/per-user/{{ nix_user }}'
+    - '{{ nix_access_tokens_file }}'
+    - '{{ nix_ansible_conf_path }}'
 
-- name: Add nixpkgs channel for user
-  when: nix_multi_user
-  shell: |
-    . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
-    nix-channel --add https://nixos.org/channels/{{ nix_channel }} nixpkgs
-    nix-channel --update
-  become_user: '{{ nix_user }}'
+- name: Create Determinate Nix config dir
+  file:
+    path:  '/etc/determinate'
+    owner: 'root'
+    group: 'root'
+    mode:  '0o755'
+    state: 'directory'
 
-- name: Create a profile for the user
-  when: nix_multi_user
-  shell: |
-    . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
-    nix profile remove hello
-    nix profile install 'nixpkgs#hello'
-  become_user: '{{ nix_user }}'
-
-- name: Add user to nixbld group
-  when: nix_multi_user
-  user:
-    name: '{{ nix_user }}'
-    groups: nixbld
-    append: true
+- name: Disable Determinate Nix Sentry telemetry
+  notify: restart nix-daemon
+  template:
+    src:   'determinate-config.json.j2'
+    dest:  '/etc/determinate/config.json'
+    owner: 'root'
+    group: 'root'
+    mode:  '0o644'

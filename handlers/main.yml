@@ -9,6 +9,6 @@
 - name: restart nix-daemon on MacOS
   listen: restart nix-daemon
   community.general.launchd:
-    name: 'org.nixos.nix-daemon'
+    name: 'systems.determinate.nix-daemon.plist'
     state: 'restarted'
   when: ansible_os_family == "Darwin"

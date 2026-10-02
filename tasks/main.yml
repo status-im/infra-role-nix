@@ -1,5 +1,5 @@
 ---
-- name: Load platform dependent tarball info
+- name: Load platform dependent installer info
   include_vars: '{{ ansible_os_family }}/{{ ansible_machine }}.yml'
 
 - name: Run Nix purge script
@@ -8,14 +8,14 @@
 
 - import_tasks: 'version.yml'
 
-- include_tasks: '{{ ansible_system | lower }}/homebrew.yml'
-  when: ansible_system == "Darwin"
+- include_tasks: 'install.yml'
+  when:
+    - nix_current_version is not defined or not (nix_is_determinate | default(false))
 
-- import_tasks: 'install.yml'
-  when: nix_current_version is not defined
-
-- include_tasks: '{{ ansible_system | lower }}/upgrade.yml'
-  when: nix_current_version != nix_version
+- include_tasks: 'upgrade.yml'
+  when:
+    - nix_current_version is defined
+    - nix_current_version != nix_version
 
 - include_tasks: '{{ ansible_system | lower }}/config.yml'
 
