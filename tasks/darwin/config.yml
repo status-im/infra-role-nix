@@ -3,7 +3,6 @@
   stat:
     path: "{{ item }}"
   loop:
-    - /etc/nix/nix.conf
     - /etc/bashrc
     - /etc/zshrc
     - /etc/zprofile
@@ -14,7 +13,6 @@
   stat:
     path: "{{ item }}.before-nix-darwin"
   loop:
-    - /etc/nix/nix.conf
     - /etc/bashrc
     - /etc/zshrc
     - /etc/zprofile
@@ -56,8 +54,7 @@
     - configuration.nix
   register: nix_darwin_config
 
-# extra-experimental-features flag is required because /etc/nix/nix.conf may
-# still exist at this point (backed up above, but the symlink isn't yet in place).
+# Enable flakes for the initial switch before nix-darwin applies the configuration.
 - name: Apply nix-darwin switch
   when: nix_darwin_config.changed or nix_force_apply | default(false)
   become: true
@@ -68,3 +65,11 @@
       --extra-experimental-features 'nix-command flakes' \
       run nix-darwin/master#darwin-rebuild -- \
       switch --flake /etc/nix-darwin
+
+- name: Include Nix access tokens in Determinate custom configuration
+  lineinfile:
+    path: /etc/nix/nix.custom.conf
+    regexp: '^!include '
+    line: '!include {{ nix_access_tokens_file }}'
+  become: true
+  notify: restart nix-daemon

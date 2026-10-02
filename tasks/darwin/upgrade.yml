@@ -1,4 +1,0 @@
----
-- name: WARNING - Nix version controlled by nix-darwin
-  ansible.builtin.debug:
-    msg: "On Darwin systems nix-darwin controlls Nix version."
