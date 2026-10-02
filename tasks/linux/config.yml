@@ -6,7 +6,7 @@
   when: nix_multi_user
   notify: restart nix-daemon
   lineinfile:
-    path: /etc/nix/nix.conf
+    path: '{{ nix_custom_conf_path }}'
     regexp: '^{{ item.key }} = .*'
     line: '{{ item.key }} = {{ item.value }}'
   with_dict: '{{ nix_settings | combine(nix_extra_settings) }}'
@@ -24,7 +24,7 @@
   when: nix_multi_user
   notify: restart nix-daemon
   lineinfile:
-    path: /etc/nix/nix.conf
+    path: '{{ nix_custom_conf_path }}'
     regexp: '^!include '
     line: '!include {{ nix_access_tokens_file }}'
 

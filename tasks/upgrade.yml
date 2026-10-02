@@ -1,0 +1,4 @@
+---
+- name: Upgrade Determinate Nix to pinned version
+  command: '/nix/var/nix/profiles/default/bin/determinate-nixd upgrade --version v{{ nix_version }}'
+  become: true

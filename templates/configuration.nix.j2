@@ -42,9 +42,7 @@
 
   environment.pathsToLink = [ "/lib" ];
 
-  nix.settings.experimental-features = "nix-command flakes";
-  # Tokens live outside the Nix store, file is managed by Ansible.
-  nix.extraOptions = "!include {{ nix_access_tokens_file }}";
+  determinateNix.enable = true;
   programs.zsh = {
     enable = true;
     enableCompletion = false;

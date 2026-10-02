@@ -15,6 +15,23 @@
   become_user: '{{ nix_user }}'
 
 - name: Extract Version from output
-  when: not nix_current_version_raw.failed
+  when:
+    - not nix_current_version_raw.failed
+    - "'Determinate Nix' not in nix_current_version_raw.stdout"
   set_fact:
     nix_current_version: '{{ nix_current_version_raw.stdout | split() | last | trim }}'
+
+- name: Extract Determinate Nix version
+  when:
+    - not nix_current_version_raw.failed
+    - "'Determinate Nix' in nix_current_version_raw.stdout"
+  set_fact:
+    nix_is_determinate: true
+    nix_current_version: "{{ nix_current_version_raw.stdout | regex_search('Determinate Nix ([^)]+)', '\\1') | trim }}"
+
+- name: Mark upstream Nix installation
+  when:
+    - not nix_current_version_raw.failed
+    - "'Determinate Nix' not in nix_current_version_raw.stdout"
+  set_fact:
+    nix_is_determinate: false
