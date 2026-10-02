@@ -13,9 +13,6 @@
 
 - import_tasks: 'version.yml'
 
-- include_tasks: '{{ ansible_system | lower }}/homebrew.yml'
-  when: ansible_system == "Darwin"
-
 - include_tasks: 'install.yml'
   when: nix_current_version is not defined or not (nix_is_determinate | default(false))
 
