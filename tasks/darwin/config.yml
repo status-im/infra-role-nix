@@ -34,8 +34,11 @@
 
 - name: Deploy nix-darwin configuration
   template:
-    src: '{{ item }}.j2'
-    dest: '/etc/nix-darwin/{{ item }}'
+    src:   '{{ item }}.j2'
+    dest:  '/etc/nix-darwin/{{ item }}'
+    owner: 'root'
+    group: 'wheel'
+    mode:  '0o640'
   loop:
     - flake.nix
     - configuration.nix

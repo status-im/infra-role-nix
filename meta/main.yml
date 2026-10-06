@@ -1,0 +1,14 @@
+---
+galaxy_info:
+  author: Jakub Sokolowski <jakub@status.im>
+  description: Install and setup Determinate Nix interpreter
+  company: Status.im
+  license: MIT
+  min_ansible_version: '2.2'
+  platforms:
+    - name: Ubuntu
+      versions:
+        - trusty
+        - xenial
+
+dependencies: []

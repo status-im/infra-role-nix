@@ -1,6 +1,6 @@
 ---
 - name: Raise open files system limit
-  notify: restart nix-daemon
+  notify: Restart nix-daemon
   sysctl:
     sysctl_file: '/etc/sysctl.d/88-ansible.conf'
     name:  'fs.file-max'
@@ -8,7 +8,7 @@
     state: 'present'
 
 - name: Create Nix config file
-  notify: restart nix-daemon
+  notify: Restart nix-daemon
   template:
     src:   'nix.ansible.conf.j2'
     dest:  '{{ nix_ansible_conf_path }}'
@@ -25,7 +25,7 @@
     mode:  '0o644'
 
 - name: Include Nix access and config files
-  notify: restart nix-daemon
+  notify: Restart nix-daemon
   lineinfile:
     path: '{{ nix_custom_conf_path }}'
     line: '!include {{ item }}'
@@ -42,7 +42,7 @@
     state: 'directory'
 
 - name: Disable Determinate Nix Sentry telemetry
-  notify: restart nix-daemon
+  notify: Restart nix-daemon
   template:
     src:   'determinate-config.json.j2'
     dest:  '/etc/determinate/config.json'

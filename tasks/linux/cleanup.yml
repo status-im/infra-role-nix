@@ -1,6 +1,7 @@
 ---
 - name: Setup Nix Store cleanup Systemd timer
-  include_role: name=infra-role-systemd-timer
+  include_role:
+    name: infra-role-systemd-timer
   vars:
     systemd_timer_start_on_creation: false
     systemd_timer_documentation:     'https://github.com/status-im/infra-role-nix'

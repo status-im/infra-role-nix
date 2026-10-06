@@ -1,5 +1,10 @@
 ---
-- import_tasks: download.yml
+- name: Download pinned Determinate Nix installer
+  get_url:
+    url:      '{{ nix_installer_url }}'
+    dest:     '{{ nix_installer_path }}'
+    checksum: '{{ nix_installer_sha | mandatory }}'
+    mode:     '0o750'
 
 - name: Install Determinate Nix
   command: |-

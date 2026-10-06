@@ -1,7 +1,0 @@
----
-- name: Download pinned Determinate Nix installer
-  get_url:
-    url: '{{ nix_installer_url }}'
-    checksum: '{{ nix_installer_sha | mandatory }}'
-    dest: '{{ nix_installer_path }}'
-    mode: 0750

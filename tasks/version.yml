@@ -7,6 +7,7 @@
     executable: '/bin/bash'
   register: nix_current_version_raw
   ignore_errors: true
+  become: true
   become_user: '{{ nix_user }}'
 
 - name: Extract Version from output
