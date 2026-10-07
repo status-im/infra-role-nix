@@ -1,5 +1,6 @@
 ---
 - name: Download pinned Determinate Nix installer
+  notify: Cleanup Nix installer
   get_url:
     url:      '{{ nix_installer_url }}'
     dest:     '{{ nix_installer_path }}'

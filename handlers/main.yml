@@ -12,3 +12,10 @@
     name: 'systems.determinate.nix-daemon.plist'
     state: 'restarted'
   when: ansible_os_family == "Darwin"
+
+- name: Cleanup after installation
+  listen: Cleanup Nix installer
+  no_log: true
+  file:
+    path:  '{{ nix_installer_path }}'
+    state: 'absent'

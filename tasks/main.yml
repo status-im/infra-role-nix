@@ -18,11 +18,3 @@
     - nix_current_version != nix_version
 
 - include_tasks: '{{ ansible_system | lower }}/config.yml'
-
-- include_tasks: '{{ ansible_system | lower }}/cleanup.yml'
-
-- name: Cleanup after installation
-  file:
-    path: '{{ nix_installer_path }}'
-    state: absent
-  no_log: true

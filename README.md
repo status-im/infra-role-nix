@@ -20,7 +20,6 @@ Deploys [Determinate Nix](https://docs.determinate.systems/) v3.22.5 on **Debian
 | `nix_extra_settings` | `{}` | Merged on top of `nix_settings` for per-host overrides |
 | `nix_access_tokens` | `{}` | Host/token pairs for Nix `access-tokens` setting |
 | `nix_access_tokens_file` | `/etc/nix/access-tokens.conf` | Where `nix_access_tokens` are written |
-| `nix_cleanup_delete_older_than` | `30d` | Nix Store cleanup removes entries older than this |
 | `nix_additional_inputs` | `{}` | Key/values pair of addtionnal inputs |
 | `nix_darwin_force_apply` | `false` | Force `nix-darwin switch` even when config is unchanged |
 | `nix_darwin_extra_packages` | `[]` | List of addtionnal packages installed via `nix-darwin` |

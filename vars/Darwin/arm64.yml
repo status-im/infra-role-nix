@@ -4,7 +4,3 @@ nix_multi_install_user: administrator
 nix_arch: 'aarch64'
 nix_platform: 'darwin'
 nix_installer_sha: 'sha256:dcb012a7978902fd8d875bec72053f34b7c733ae317b26b27777b241d43c441e'
-nix_cleanup_timer_name: 'im.status.nix-store-cleanup'
-nix_cleanup_timer_frequency: 86400
-nix_cleanup_timer_script_path: '/usr/local/bin/nix-gc-wrapper.sh'
-nix_cleanup_timer_consul_check_timeout: '10s'

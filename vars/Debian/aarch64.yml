@@ -4,5 +4,3 @@ nix_multi_install_user: admin
 nix_arch: 'aarch64'
 nix_platform: 'linux'
 nix_installer_sha: 'sha256:71cabad624d6cace0beecc44961494c0821bc8b874d63f3c27d816778df83e5c'
-nix_cleanup_timer_frequency: 'daily'
-nix_cleanup_timer_script_path: '/nix/var/nix/profiles/default/bin/nix-collect-garbage'
