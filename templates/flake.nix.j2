@@ -8,6 +8,7 @@
     determinate.url = "https://flakehub.com/f/DeterminateSystems/determinate/3.22.5";
     determinate.inputs.nixpkgs.follows = "nixpkgs";
     nimbus-build-system.url = "git+https://github.com/status-im/nimbus-build-system?rev={{ nix_darwin_nbs_rev }}&submodules=1";
+    nimbus-build-system.inputs.nimble.url = "git+https://github.com/nim-lang/nimble?rev={{ nix_darwin_nbs_nimble_rev }}&submodules=1&shallow=1";
 
 {% for name, url in nix_additional_inputs.items() %}
     {{ name }}.url = "{{ url }}";

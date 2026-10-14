@@ -39,7 +39,8 @@ nix_garbage_collector_strategy: 'automatic' # or 'disabled'
 # Only used by nix-darwin
 nix_darwin_pkgs_rev: '98bf8103e311377ca1d648c22f56332756d89bb2' #nixpkgs-25.11-darwin
 nix_darwin_flake_rev: 'ebec37af18215214173c98cf6356d0aca24a2585' #nix-darwin-25.11
-nix_darwin_nbs_rev: 'cb9cfbdad6c02cfbe432c9ce4bd734e5bedbdf4b' #nimbus-build-system master, Nim 2.2.10
+nix_darwin_nbs_rev: 'a46d8b5e3c30a8a822225e9a81c19e63d159c2b2' #nimbus-build-system master, Nim 2.2.12
+nix_darwin_nbs_nimble_rev: '33a6bc8e50a33222fce075143800fe5a715e8bfe' #nimble 0.26.0
 nix_darwin_bin_path: '/run/current-system/sw/bin'
 # Use to force apply nix darwin configuration switch even when config is unchanged.
 nix_darwin_force_apply: false
