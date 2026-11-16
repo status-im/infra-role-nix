@@ -7,28 +7,29 @@
     - /etc/zprofile
     - /etc/zshenv
     - /etc/zshrc
+    - /etc/nix/nix.custom.conf
   register: nix_darwin_etc_files
 
 - name: Back up files conflicting with nix-darwin
   command:
     argv:
       - 'mv'
-      - '{{ item.stat.path }}'
-      - '{{ item.stat.path }}.before-nix-darwin'
-    creates: '{{ item.stat.path }}.before-nix-darwin'
+      - '{{ item.item }}'
+      - '{{ item.item }}.before-nix-darwin'
+    creates: '{{ item.item }}.before-nix-darwin'
   when:
     - item.stat.exists
     - not item.stat.islnk
   loop: '{{ nix_darwin_etc_files.results }}'
   loop_control:
-    label: '{{ item.stat.path }}'
+    label: '{{ item.item }}'
   become: true
 
 - name: Setup nix-darwin directories
   file:
     path:  '/etc/nix-darwin'
     state: 'directory'
-    owner: '{{ nix_user }}'
+    owner: 'root'
     mode:  '0o755'
   become: true
 
@@ -44,9 +45,17 @@
     - configuration.nix
   register: nix_darwin_config
 
+- name: Check if nix-darwin system is activated
+  stat:
+    path: '/run/current-system'
+  register: nix_darwin_current_system
+
 # Enable flakes for the initial switch before nix-darwin applies the configuration.
 - name: Apply nix-darwin switch
-  when: nix_darwin_config.changed or nix_darwin_force_apply | default(false)
+  when: >
+    nix_darwin_config.changed or
+    not nix_darwin_current_system.stat.exists or
+    nix_darwin_force_apply | default(false)
   become: true
   environment:
     HOMEBREW_NO_ASK: '1'

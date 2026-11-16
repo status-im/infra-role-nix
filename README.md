@@ -13,7 +13,6 @@ Deploys [Determinate Nix](https://docs.determinate.systems/) v3.22.5 on **Debian
 
 | Variable | Default | Description |
 |---|---|---|
-| `nix_user` | `admin` | User for whom Nix is installed |
 | `nix_version` | `3.22.5` | Determinate Nix release to install |
 | `nix_installer_sha` | platform-specific | SHA256 of pinned release installer binary |
 | `nix_settings` | defaults in `defaults/main.yml` | Key/value pairs written to `/etc/nix/nix.custom.conf` (Linux only) |

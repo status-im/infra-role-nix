@@ -1,6 +1,4 @@
 ---
-nix_user: 'admin'
-nix_multi_install_user: administrator
 nix_arch: 'aarch64'
 nix_platform: 'darwin'
 nix_installer_sha: 'sha256:dcb012a7978902fd8d875bec72053f34b7c733ae317b26b27777b241d43c441e'

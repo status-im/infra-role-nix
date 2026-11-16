@@ -1,8 +1,8 @@
 ---
-nix_user: 'admin'
 nix_version: '3.22.5'
 nix_installer_url: 'https://github.com/DeterminateSystems/nix-installer/releases/download/v{{ nix_version }}/nix-installer-{{ nix_arch }}-{{ nix_platform }}'
 nix_installer_path: '/tmp/nix-installer-{{ nix_version }}-{{ nix_arch }}-{{ nix_platform }}'
+nix_installer_plan_path: '/tmp/nix-installer-plan.json'
 nix_custom_conf_path: '/etc/nix/nix.custom.conf'
 nix_ansible_conf_path: '/etc/nix/nix.ansible.conf'
 # Used by nix-darwin's nixbld user configuration.
