@@ -29,8 +29,8 @@
     enableCompletion = false;
   };
   programs.bash.enable = true;
+  security.pam.services.sudo_local.enable = false;
   nixpkgs.hostPlatform = "aarch64-darwin";
 
-  system.primaryUser = "{{ nix_user }}";
   system.stateVersion = 5;
 }

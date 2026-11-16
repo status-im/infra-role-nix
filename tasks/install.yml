@@ -11,8 +11,42 @@
   command: |-
     {{ nix_installer_path }} install \
       --determinate --no-confirm \
-      --diagnostic-endpoint="" \
-      {% if ansible_system == "Darwin" %}--nix-build-user-id-base {{ nix_first_build_uid - 1 }}{% endif %}
+      --diagnostic-endpoint=""
   become: true
+  when: ansible_system != "Darwin"
+
+- name: Generate Determinate Nix install plan
+  command: |-
+    {{ nix_installer_path }} plan \
+      --out-file {{ nix_installer_plan_path }}.orig \
+      macos --determinate \
+      --diagnostic-endpoint="" \
+      --nix-build-user-id-base {{ nix_first_build_uid - 1 }}
+  become: true
+  when: ansible_system == "Darwin"
+
+- name: Mark fstab entry as completed in install plan
+  shell: |
+    jq '(.actions[]
+      | select(.action.action_name == "create_determinate_nix_volume")
+      | .action.create_fstab_entry.state) = "Completed"' \
+      {{ nix_installer_plan_path }}.orig > {{ nix_installer_plan_path }}
+  become: true
+  when: ansible_system == "Darwin"
+
+- name: Install Determinate Nix from plan
+  command: '{{ nix_installer_path }} install {{ nix_installer_plan_path }} --no-confirm'
+  become: true
+  when: ansible_system == "Darwin"
+
+- name: Remove install plan files
+  file:
+    path: '{{ item }}'
+    state: absent
+  become: true
+  with_items:
+    - '{{ nix_installer_plan_path }}'
+    - '{{ nix_installer_plan_path }}.orig'
+  when: ansible_system == "Darwin"
 
 - import_tasks: version.yml

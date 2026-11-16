@@ -1,6 +1,4 @@
 ---
-nix_user: 'admin'
-nix_multi_install_user: admin
 nix_arch: 'x86_64'
 nix_platform: 'linux'
 nix_installer_sha: 'sha256:9432d40ec1d0d4ebb6284848cc389bdb1bbf7aeb5c1cea11e7efc9daf0a1ec82'
