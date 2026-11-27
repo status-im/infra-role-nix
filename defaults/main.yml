@@ -18,8 +18,9 @@ nix_experimental_features: []
 nix_settings:
   'experimental-features': '{{ nix_experimental_features | join(" ") }}'
   'download-buffer-size': '{{ 256 * 1024 * 1024 }}' # 256 MB
-  'extra-substituters': 'https://nix-cache.status.im/'
-  'extra-trusted-public-keys': 'nix-cache.status.im-1:x/93lOfLU+duPplwMSBR+OlY4+mo+dCN7n0mr4oPwgY='
+  'trusted-substituters': 'https://cache.nix.free.technology/public'
+  'extra-substituters':   'https://cache.nix.free.technology/public'
+  'extra-trusted-public-keys': 'public:vAX6ZzpZzkgFEKPjf8r3Y3dSxrjZMu5+b1STWsvffeI='
 
 # Additional settings which override defaults from nix_settings.
 nix_extra_settings: {}
